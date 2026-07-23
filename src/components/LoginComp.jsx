@@ -4,7 +4,7 @@ import { login } from "../redux/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginComp() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
 
@@ -20,38 +20,34 @@ export default function LoginComp() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username,
+        email,
         password,
       }),
     };
 
-    fetch("http://localhost:9000/login", reqoptions)
+    fetch("http://localhost:8081/api/users/login", reqoptions)
       .then((resp) => {
-        if (resp.status === 200) {
-          return resp.json();
-        } else {
-          setMsg("Invalid Username or Password");
-          return {};
+        if (!resp.ok) {
+          throw new Error("Invalid Email or Password");
         }
+        return resp.json();
       })
       .then((data) => {
-        if (!data.user) return;
-
         dispatch(
           login({
-            user: data.user,
-            token: data.token,
+            user: data,
+            token: null,
           })
         );
 
-        if (data.user.role === 1) {
+        if (data.role === "ADMIN") {
           navigate("/admin");
         } else {
           navigate("/user");
         }
       })
-      .catch(() => {
-        setMsg("Server Error. Please try again.");
+      .catch((err) => {
+        setMsg(err.message);
       });
   };
 
@@ -70,7 +66,7 @@ export default function LoginComp() {
 
             <img
               src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png"
-              alt="logo"
+              alt="TradeNest"
               className="img-fluid mt-4"
               style={{ maxWidth: "300px" }}
             />
@@ -80,7 +76,6 @@ export default function LoginComp() {
         {/* Right Side */}
         <div className="col-md-6 d-flex justify-content-center align-items-center bg-light position-relative">
 
-          {/* Home Link */}
           <div
             className="position-absolute"
             style={{
@@ -123,16 +118,16 @@ export default function LoginComp() {
 
               <div className="mb-3">
                 <label className="form-label">
-                  Username
+                  Email
                 </label>
 
                 <input
-                  type="text"
+                  type="email"
                   className="form-control form-control-lg"
-                  placeholder="Enter Username"
-                  value={username}
+                  placeholder="Enter Email"
+                  value={email}
                   onChange={(e) =>
-                    setUsername(e.target.value)
+                    setEmail(e.target.value)
                   }
                   required
                 />
