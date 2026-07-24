@@ -1,27 +1,103 @@
-import { NavLink, Outlet } from "react-router-dom";
-export default function UserDashboard(){
-    return(
-        <>
-         <h2>User Panel</h2>
-         <div className="d-flex">         
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-           <ul className="nav nav-pills flex-column p-3 border-end">
-            <li className="nav-item">
-            <NavLink to="search">Search</NavLink>
-            </li>
-            <li className="nav-item">
-            <NavLink to="buy">Buy</NavLink>
-            </li>
-            <li className="nav-item">   
-            <NavLink to="logout">Logout</NavLink>
-            </li>
-          </ul>
-        
-        <div className="p-3 flex-grow-1">
-            <Outlet />
-        </div>
+import BrowseAssets from "./BrowseAssets";
+import AddAsset from "./AddAsset";
+
+export default function UserDashboard() {
+
+  const auth = useSelector((state) => state.auth);
+
+  const [activePage, setActivePage] = useState("browse");
+
+  return (
+    <div className="container mt-5">
+
+      <div className="d-flex justify-content-between align-items-center mb-3">
+
+        <h2>
+          Welcome {auth?.user?.username || "User"}
+        </h2>
+
+        <Link
+          to="/logout"
+          className="btn btn-danger"
+        >
+          Logout
+        </Link>
+
+      </div>
+
+      <hr />
+
+      <div className="row">
+
+        {/* Sidebar */}
+        <div className="col-md-3">
+
+          <div className="list-group">
+
+            <button
+              className="list-group-item list-group-item-action"
+              onClick={() => setActivePage("browse")}
+            >
+              Browse Assets
+            </button>
+
+            <button
+              className="list-group-item list-group-item-action"
+              onClick={() => setActivePage("add")}
+            >
+              Add Asset
+            </button>
+
+            <button
+              className="list-group-item list-group-item-action"
+            >
+              My Listings
+            </button>
+
+            <button
+              className="list-group-item list-group-item-action"
+            >
+              Purchase History
+            </button>
+
+            <button
+              className="list-group-item list-group-item-action"
+            >
+              Rental History
+            </button>
+
+            <Link
+              to="/logout"
+              className="list-group-item list-group-item-action text-danger fw-bold"
+            >
+              Logout
+            </Link>
+
+          </div>
+
         </div>
 
-        </>
-    )
+        {/* Content Area */}
+        <div className="col-md-9">
+
+          <div className="card p-4 shadow-sm">
+
+            {
+              activePage === "browse"
+                ? <BrowseAssets />
+                : <AddAsset />
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
 }
