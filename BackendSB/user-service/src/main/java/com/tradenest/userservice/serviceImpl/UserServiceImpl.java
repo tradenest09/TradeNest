@@ -2,6 +2,7 @@ package com.tradenest.userservice.serviceImpl;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -145,4 +146,13 @@ public class UserServiceImpl implements UserService {
                 .status(user.getStatus())
                 .build();
     }
+
+	@Override
+	public UserResponse getUserByUname(String uname) {
+		return userRepository.findByUname(uname)
+				.map(this::mapToUserResponse)
+				.orElseThrow(() -> new RuntimeException("User not found: " + uname));
+
+		
+	}
 }
