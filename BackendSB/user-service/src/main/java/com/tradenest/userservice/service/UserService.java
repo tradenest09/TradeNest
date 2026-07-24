@@ -22,5 +22,8 @@ public interface UserService {
 	UserResponse updateUser(Integer uid, UpdateUserRequest request);
 
 	ApiResponse deleteUser(Integer uid);
+	
+	public UserResponse getUserByUname(String uname);
+	
 }
 
