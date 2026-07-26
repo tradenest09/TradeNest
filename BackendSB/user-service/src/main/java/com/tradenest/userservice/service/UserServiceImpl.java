@@ -1,9 +1,8 @@
-package com.tradenest.userservice.serviceImpl;
-
+package com.tradenest.userservice.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tradenest.userservice.dto.request.LoginRequest;
@@ -17,19 +16,25 @@ import com.tradenest.userservice.entity.User;
 import com.tradenest.userservice.enums.UserStatus;
 import com.tradenest.userservice.repository.RoleRepository;
 import com.tradenest.userservice.repository.UserRepository;
-import com.tradenest.userservice.service.UserService;
-
+import com.tradenest.userservice.security.JwtService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository) {
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtService jwtService) {
+
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
         User user = User.builder()
                 .uname(request.getUname())
-                .password(request.getPassword()) // BCrypt later
+                .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .contactNumber(request.getContactNumber())
                 .fname(request.getFname())
@@ -70,17 +75,26 @@ public class UserServiceImpl implements UserService {
     public LoginResponse loginUser(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid Email"));
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid Email or Password"));
 
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new RuntimeException("Invalid Password");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid Email or Password");
         }
 
+        String token = jwtService.generateToken(user.getEmail());
+
         return LoginResponse.builder()
+                .token(token)
+                .type("Bearer")
                 .uid(user.getUid())
                 .uname(user.getUname())
+                .email(user.getEmail())
+                .contactNumber(user.getContactNumber())
+                .fname(user.getFname())
+                .lname(user.getLname())
                 .role(user.getRole().getRname())
-                .message("Login Successful")
+                .status(user.getStatus())
                 .build();
     }
 
@@ -132,7 +146,15 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-   
+    @Override
+    public UserResponse getUserByUname(String uname) {
+
+        return userRepository.findByUname(uname)
+                .map(this::mapToUserResponse)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found : " + uname));
+    }
+
     private UserResponse mapToUserResponse(User user) {
 
         return UserResponse.builder()
@@ -146,13 +168,4 @@ public class UserServiceImpl implements UserService {
                 .status(user.getStatus())
                 .build();
     }
-
-	@Override
-	public UserResponse getUserByUname(String uname) {
-		return userRepository.findByUname(uname)
-				.map(this::mapToUserResponse)
-				.orElseThrow(() -> new RuntimeException("User not found: " + uname));
-
-		
-	}
 }
