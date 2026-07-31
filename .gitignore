@@ -1,5 +1,7 @@
+
 # Logs
-logs
+
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,28 +9,38 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+
+# Frontend (React/Vite)
+
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
 *.local
 
-# Editor directories and files
+
+# Java / Maven
+
+**/target/
+
+# Eclipse / STS
+.metadata/
+**/.classpath
+**/.project
+**/.factorypath
+**/.settings/
+
+# VS Code / IntelliJ
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+
+# OS Files
 .DS_Store
+Thumbs.db
+
+
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-# Eclipse / STS
-.metadata/
-.classpath
-.project
-.factorypath
-.settings/
-
-# Maven
-target/
