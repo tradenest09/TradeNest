@@ -5,42 +5,41 @@ import { useNavigate } from "react-router-dom";
 
 export default function LogoutComp() {
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  useEffect(() => {
+    useEffect(() => {
 
-    dispatch(logout());
+        dispatch(logout());
 
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+        setTimeout(() => {
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
+            navigate("/login");
 
-  }, [dispatch, navigate]);
+        }, 1000);
 
-  return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "100vh" }}
-    >
-      <div className="text-center">
+    }, [dispatch, navigate]);
+
+    return (
 
         <div
-          className="spinner-border text-primary mb-3"
-          role="status"
-        ></div>
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100vh" }}
+        >
 
-        <h3>Logging Out...</h3>
+            <div className="text-center">
 
-        <p className="text-muted">
-          Redirecting to Login Page
-        </p>
+                <div
+                    className="spinner-border text-primary mb-3"
+                    role="status"
+                />
 
-      </div>
-    </div>
-  );
+                <h3>Logging Out...</h3>
+
+            </div>
+
+        </div>
+
+    );
+
 }
-
