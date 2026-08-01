@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import BrowseAssets from "./BrowseAssets";
-import AddAsset from "./AddAsset";
+import BrowseAssets from "../product/BrowseAssets";
+import AddAsset from "../product/AddAsset";
 
 export default function UserDashboard() {
 

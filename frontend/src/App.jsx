@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import LoginComp from "./components/LoginComp";
-import RegisterComp from "./components/RegisterComp";
-import UserDashboard from "./components/UserDashboard";
-import AdminDashboard from "./components/AdminDashboard";
-import LogoutComp from "./components/LogoutComp";
-import HomePage from "./components/HomePage";
+import LoginComp from "./components/auth/LoginComp";
+import RegisterComp from "./components/auth/RegisterComp";
+import UserDashboard from "./components/user/userDashBoard";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import LogoutComp from "./components/auth/LogoutComp";
+import HomePage from "./components/home/HomePage";
 
 
 function App() {
