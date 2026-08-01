@@ -1,476 +1,334 @@
-// import { useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-
-// export default function RegisterComp() {
-//   const navigate = useNavigate();
-
-//   const [formData, setFormData] = useState({
-//     username: "",
-//     password: "",
-//     firstname: "",
-//     lastname: "",
-//     email: "",
-//     contactnumber: "",
-//   });
-
-//   const [msg, setMsg] = useState("");
-
-//   const handleChange = (e) => {
-//     setFormData({
-//       ...formData,
-//       [e.target.name]: e.target.value,
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     fetch("http://localhost:9000/register", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(formData),
-//     })
-//       .then((res) => {
-//         if (res.status === 201) {
-//           setMsg("Registration Successful");
-
-//           setTimeout(() => {
-//             navigate("/login");
-//           }, 1500);
-//         } else {
-//           setMsg("Registration Failed");
-//         }
-//       })
-//       .catch(() => {
-//         setMsg("Something went wrong");
-//       });
-//   };
-
-//   return (
-//     <div className="container-fluid min-vh-100">
-//       <div className="row min-vh-100">
-
-//         {/* Left Side */}
-//         <div className="col-md-6 d-none d-md-flex bg-primary text-white justify-content-center align-items-center">
-//           <div className="text-center p-5">
-
-//             <h1 className="display-3 fw-bold">
-//               TradeNest
-//             </h1>
-
-//             <p className="lead mt-3">
-//               Join the Smart Marketplace
-//             </p>
-
-//             <h5 className="mt-4 fw-bold">
-//               Buy • Sell • Rent Assets
-//             </h5>
-
-//             <img
-//               src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png"
-//               alt="TradeNest Logo"
-//               className="img-fluid mt-4"
-//               style={{
-//                 maxWidth: "300px",
-//               }}
-//             />
-
-//           </div>
-//         </div>
-
-//         {/* Right Side */}
-//         <div className="col-md-6 d-flex justify-content-center align-items-center bg-light position-relative">
-
-//           {/* Home Link */}
-//           <div
-//             className="position-absolute"
-//             style={{
-//               top: "25px",
-//               left: "25px",
-//             }}
-//           >
-//             <Link
-//               to="/home"
-//               className="text-decoration-none fw-semibold"
-//             >
-//               ← Back to Home
-//             </Link>
-//           </div>
-
-//           <div
-//             className="card shadow-lg border-0 p-4"
-//             style={{
-//               width: "500px",
-//               borderRadius: "20px",
-//             }}
-//           >
-//             <div className="text-center mb-4">
-
-//               <h2 className="fw-bold">
-//                 Create Account
-//               </h2>
-
-//               <p className="text-muted">
-//                 Start your journey with TradeNest
-//               </p>
-
-//             </div>
-
-//             {msg && (
-//               <div
-//                 className={`alert ${
-//                   msg.includes("Successful")
-//                     ? "alert-success"
-//                     : "alert-danger"
-//                 }`}
-//               >
-//                 {msg}
-//               </div>
-//             )}
-
-//             <form onSubmit={handleSubmit}>
-
-//               <div className="row">
-
-//                 <div className="col-md-6 mb-3">
-//                   <input
-//                     type="text"
-//                     name="firstname"
-//                     placeholder="First Name"
-//                     className="form-control form-control-lg"
-//                     onChange={handleChange}
-//                     required
-//                   />
-//                 </div>
-
-//                 <div className="col-md-6 mb-3">
-//                   <input
-//                     type="text"
-//                     name="lastname"
-//                     placeholder="Last Name"
-//                     className="form-control form-control-lg"
-//                     onChange={handleChange}
-//                     required
-//                   />
-//                 </div>
-
-//               </div>
-
-//               <div className="mb-3">
-//                 <input
-//                   type="text"
-//                   name="username"
-//                   placeholder="Username"
-//                   className="form-control form-control-lg"
-//                   onChange={handleChange}
-//                   required
-//                 />
-//               </div>
-
-//               <div className="mb-3">
-//                 <input
-//                   type="email"
-//                   name="email"
-//                   placeholder="Email Address"
-//                   className="form-control form-control-lg"
-//                   onChange={handleChange}
-//                   required
-//                 />
-//               </div>
-
-//               <div className="mb-3">
-//                 <input
-//                   type="text"
-//                   name="contactnumber"
-//                   placeholder="Mobile Number"
-//                   className="form-control form-control-lg"
-//                   onChange={handleChange}
-//                   required
-//                 />
-//               </div>
-
-//               <div className="mb-4">
-//                 <input
-//                   type="password"
-//                   name="password"
-//                   placeholder="Password"
-//                   className="form-control form-control-lg"
-//                   onChange={handleChange}
-//                   required
-//                 />
-//               </div>
-
-//               <button
-//                 className="btn btn-primary btn-lg w-100"
-//                 type="submit"
-//               >
-//                 Create Account
-//               </button>
-
-//             </form>
-
-//             <hr />
-
-//             <p className="text-center mb-0">
-//               Already have an account?
-
-//               <Link
-//                 to="/login"
-//                 className="ms-2 fw-bold text-decoration-none"
-//               >
-//                 Login
-//               </Link>
-//             </p>
-
-//           </div>
-
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { register } from "../../api/authApi";
 
 export default function RegisterComp() {
-  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    uname: "",
-    password: "",
-    fname: "",
-    lname: "",
-    email: "",
-    contactNumber: "",
-  });
+    const navigate = useNavigate();
 
-  const [msg, setMsg] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    const [formData, setFormData] = useState({
+        uname: "",
+        password: "",
+        email: "",
+        contactNumber: "",
+        fname: "",
+        lname: ""
     });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
 
-    fetch("http://localhost:8081/api/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then(async (res) => {
-        const data = await res.json();
+    const handleChange = (e) => {
 
-        if (res.ok) {
-          setMsg("Registration Successful");
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
 
-          setTimeout(() => {
-            navigate("/login");
-          }, 1500);
-        } else {
-          setMsg(data.message || "Registration Failed");
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        setLoading(true);
+        setError("");
+        setMessage("");
+
+        try {
+
+            await register(formData);
+
+            setMessage("Registration Successful!");
+
+            setTimeout(() => {
+
+                navigate("/login");
+
+            }, 1500);
+
         }
-      })
-      .catch(() => {
-        setMsg("Server Error");
-      });
-  };
+        catch (err) {
 
-  return (
-    <div className="container-fluid min-vh-100">
-      <div className="row min-vh-100">
+            if (err.response) {
 
-        {/* Left Side */}
-        <div className="col-md-6 d-none d-md-flex bg-primary text-white justify-content-center align-items-center">
-          <div className="text-center p-5">
+                setError(err.response.data.message || "Registration Failed");
 
-            <h1 className="display-3 fw-bold">
-              TradeNest
-            </h1>
+            }
+            else {
 
-            <p className="lead mt-3">
-              Join the Smart Marketplace
-            </p>
+                setError("Unable to connect to server.");
 
-            <h5 className="mt-4 fw-bold">
-              Buy • Sell • Rent Assets
-            </h5>
+            }
 
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png"
-              alt="TradeNest Logo"
-              className="img-fluid mt-4"
-              style={{
-                maxWidth: "300px",
-              }}
-            />
+        }
+        finally {
 
-          </div>
-        </div>
+            setLoading(false);
 
-        {/* Right Side */}
-        <div className="col-md-6 d-flex justify-content-center align-items-center bg-light position-relative">
+        }
 
-          <div
-            className="position-absolute"
-            style={{
-              top: "25px",
-              left: "25px",
-            }}
-          >
-            <Link
-              to="/home"
-              className="text-decoration-none fw-semibold"
-            >
-              ← Back to Home
-            </Link>
-          </div>
+    };
 
-          <div
-            className="card shadow-lg border-0 p-4"
-            style={{
-              width: "500px",
-              borderRadius: "20px",
-            }}
-          >
-            <div className="text-center mb-4">
+    return (
 
-              <h2 className="fw-bold">
-                Create Account
-              </h2>
+        <div className="container-fluid min-vh-100">
 
-              <p className="text-muted">
-                Start your journey with TradeNest
-              </p>
+            <div className="row min-vh-100">
+
+                {/* Left */}
+
+                <div className="col-md-6 bg-primary text-white d-none d-md-flex justify-content-center align-items-center">
+
+                    <div className="text-center">
+
+                        <h1 className="display-4 fw-bold">
+
+                            TradeNest
+
+                        </h1>
+
+                        <p className="lead">
+
+                            Create your account and start trading assets.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {/* Right */}
+
+                <div className="col-md-6 d-flex justify-content-center align-items-center bg-light">
+
+                    <div
+                        className="card shadow-lg p-4 border-0"
+                        style={{
+                            width: "500px",
+                            borderRadius: "20px"
+                        }}
+                    >
+
+                        <h2 className="text-center mb-4">
+
+                            Register
+
+                        </h2>
+
+                        {
+
+                            message &&
+
+                            <div className="alert alert-success">
+
+                                {message}
+
+                            </div>
+
+                        }
+
+                        {
+
+                            error &&
+
+                            <div className="alert alert-danger">
+
+                                {error}
+
+                            </div>
+
+                        }
+
+                        <form onSubmit={handleSubmit}>
+
+                            <div className="row">
+
+                                <div className="col-md-6 mb-3">
+
+                                    <label>First Name</label>
+
+                                    <input
+
+                                        type="text"
+
+                                        name="fname"
+
+                                        className="form-control"
+
+                                        value={formData.fname}
+
+                                        onChange={handleChange}
+
+                                        required
+
+                                    />
+
+                                </div>
+
+                                <div className="col-md-6 mb-3">
+
+                                    <label>Last Name</label>
+
+                                    <input
+
+                                        type="text"
+
+                                        name="lname"
+
+                                        className="form-control"
+
+                                        value={formData.lname}
+
+                                        onChange={handleChange}
+
+                                        required
+
+                                    />
+
+                                </div>
+
+                            </div>
+
+                            <div className="mb-3">
+
+                                <label>Username</label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="uname"
+
+                                    className="form-control"
+
+                                    value={formData.uname}
+
+                                    onChange={handleChange}
+
+                                    required
+
+                                />
+
+                            </div>
+
+                            <div className="mb-3">
+
+                                <label>Email</label>
+
+                                <input
+
+                                    type="email"
+
+                                    name="email"
+
+                                    className="form-control"
+
+                                    value={formData.email}
+
+                                    onChange={handleChange}
+
+                                    required
+
+                                />
+
+                            </div>
+
+                            <div className="mb-3">
+
+                                <label>Contact Number</label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="contactNumber"
+
+                                    className="form-control"
+
+                                    value={formData.contactNumber}
+
+                                    onChange={handleChange}
+
+                                    required
+
+                                />
+
+                            </div>
+
+                            <div className="mb-4">
+
+                                <label>Password</label>
+
+                                <input
+
+                                    type="password"
+
+                                    name="password"
+
+                                    className="form-control"
+
+                                    value={formData.password}
+
+                                    onChange={handleChange}
+
+                                    required
+
+                                />
+
+                            </div>
+
+                            <button
+
+                                className="btn btn-success w-100"
+
+                                disabled={loading}
+
+                            >
+
+                                {
+
+                                    loading ?
+
+                                        "Registering..." :
+
+                                        "Register"
+
+                                }
+
+                            </button>
+
+                        </form>
+
+                        <hr />
+
+                        <p className="text-center">
+
+                            Already have an account?
+
+                            <Link
+
+                                to="/login"
+
+                                className="ms-2 text-decoration-none"
+
+                            >
+
+                                Login
+
+                            </Link>
+
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
-            {msg && (
-              <div
-                className={`alert ${
-                  msg.includes("Successful")
-                    ? "alert-success"
-                    : "alert-danger"
-                }`}
-              >
-                {msg}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit}>
-
-              <div className="row">
-
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    name="fname"
-                    placeholder="First Name"
-                    className="form-control form-control-lg"
-                    value={formData.fname}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    name="lname"
-                    placeholder="Last Name"
-                    className="form-control form-control-lg"
-                    value={formData.lname}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-              </div>
-
-              <div className="mb-3">
-                <input
-                  type="text"
-                  name="uname"
-                  placeholder="Username"
-                  className="form-control form-control-lg"
-                  value={formData.uname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  className="form-control form-control-lg"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <input
-                  type="text"
-                  name="contactNumber"
-                  placeholder="Mobile Number"
-                  className="form-control form-control-lg"
-                  value={formData.contactNumber}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  className="form-control form-control-lg"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <button
-                className="btn btn-primary btn-lg w-100"
-                type="submit"
-              >
-                Create Account
-              </button>
-
-            </form>
-
-            <hr />
-
-            <p className="text-center mb-0">
-              Already have an account?
-
-              <Link
-                to="/login"
-                className="ms-2 fw-bold text-decoration-none"
-              >
-                Login
-              </Link>
-            </p>
-
-          </div>
-
         </div>
 
-      </div>
-    </div>
-  );
+    );
+
 }
