@@ -1,70 +1,79 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import LoginComp from "../components/auth/LoginComp";
 import RegisterComp from "../components/auth/RegisterComp";
 import LogoutComp from "../components/auth/LogoutComp";
 
-// import HomeComp from "../components/home/HomeComp";
+import HomeComp from "../components/home/HomeComp";
+import UserDashboard from "../components/user/UserDashboard";
+import AdminDashboard from "../components/admin/AdminDashboard";
 
-// import UserDashboard from "../components/user/UserDashboard";
-// import AdminDashboard from "../components/admin/AdminDashboard";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 
-//import ProtectedRoute from "../components/common/ProtectedRoute";
+import Products from "../components/product/Products";
+import ProductDetails from "../components/product/ProductDetails";
+import EditProduct from "../components/product/EditProduct";
 
 export default function AppRoutes() {
 
     return (
 
-        <BrowserRouter>
+        <Routes>
 
-            <Routes>
+            <Route path="/" element={<HomeComp />} />
 
-                {/* <Route
-                    path="/"
-                    element={<HomeComp />}
-                /> */}
+            <Route path="/login" element={<LoginComp />} />
 
-                <Route
-                    path="/login"
-                    element={<LoginComp />}
-                />
+            <Route path="/register" element={<RegisterComp />} />
 
-                <Route
-                    path="/register"
-                    element={<RegisterComp />}
-                />
+            <Route path="/logout" element={<LogoutComp />} />
 
-                <Route
-                    path="/logout"
-                    element={<LogoutComp />}
-                />
+            <Route
+                path="/user"
+                element={
+                    <ProtectedRoute allowedRoles={["USER"]}>
+                        <UserDashboard />
+                    </ProtectedRoute>
+                }
+            />
 
-                {/* <Route
-                    path="/user"
-                    element={
-                        <ProtectedRoute>
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute allowedRoles={["ADMIN"]}>
+                        <AdminDashboard />
+                    </ProtectedRoute>
+                }
+            />
 
-                            <UserDashboard />
+            <Route
+                path="/products"
+                element={
+                    <ProtectedRoute>
+                        <Products />
+                    </ProtectedRoute>
+                }
+            />
 
-                        </ProtectedRoute>
-                    }
-                /> */}
+            <Route
+                path="/products/:pid"
+                element={
+                    <ProtectedRoute>
+                        <ProductDetails />
+                    </ProtectedRoute>
+                }
+            />
 
-                {/* <Route
-                    path="/admin"
-                    element={
-                        <ProtectedRoute>
+            <Route
+                path="/products/edit/:pid"
+                element={
+                    <ProtectedRoute>
+                        <EditProduct />
+                    </ProtectedRoute>
+                }
+            />
 
-                            <AdminDashboard />
-
-                        </ProtectedRoute>
-                    }
-                /> */}
-
-            </Routes>
-
-        </BrowserRouter>
+        </Routes>
 
     );
-
 }
