@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+﻿import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/authSlice";
 
@@ -80,7 +80,7 @@ export default function Navbar() {
 
                                         <Link
                                             className="nav-link"
-                                            to="/my-products"
+                                            to="/dashboard"
                                         >
 
                                             My Products
@@ -93,7 +93,7 @@ export default function Navbar() {
 
                                         <Link
                                             className="nav-link"
-                                            to="/purchases"
+                                            to="/dashboard"
                                         >
 
                                             Purchases
@@ -117,7 +117,7 @@ export default function Navbar() {
 
                                 <Link
                                     className="nav-link"
-                                    to="/admin"
+                                    to="/admin/manage"
                                 >
 
                                     Admin

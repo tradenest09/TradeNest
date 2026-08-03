@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+﻿import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
 
             <h5>Revenue</h5>
 
-            <h2>₹0</h2>
+            <h2>â‚¹0</h2>
 
           </div>
 
@@ -123,21 +123,21 @@ export default function AdminDashboard() {
 
             <NavLink
               className="list-group-item list-group-item-action"
-              to="users"
+              to="/admin/manage?tab=users"
             >
               Users
             </NavLink>
 
             <NavLink
               className="list-group-item list-group-item-action"
-              to="assets"
+              to="/admin/manage?tab=products"
             >
               Assets
             </NavLink>
 
             <NavLink
               className="list-group-item list-group-item-action"
-              to="reports"
+              to="/admin/reports"
             >
               Reports
             </NavLink>
@@ -159,7 +159,7 @@ export default function AdminDashboard() {
 
           <div className="card p-4 shadow-sm">
 
-            <Outlet />
+            <p className="mb-0 text-muted">Select Users, Assets, or Reports to open the administration workspace.</p>
 
           </div>
 
@@ -172,3 +172,6 @@ export default function AdminDashboard() {
   );
 
 }
+
+
+
