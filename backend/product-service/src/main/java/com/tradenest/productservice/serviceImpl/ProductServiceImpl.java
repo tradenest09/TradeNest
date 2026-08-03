@@ -157,4 +157,11 @@ public class ProductServiceImpl implements ProductService {
                 .message("Product deleted successfully")
                 .build();
     }
+    
+    @Override
+    public long getTotalProducts() {
+
+        return productRepository.count();
+
+    }
 }

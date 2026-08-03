@@ -77,4 +77,11 @@ public class PurchaseController
         return ResponseEntity.ok(
                 purchaseService.cancelPurchase(purchaseId));
     }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalOrders() {
+
+        return ResponseEntity.ok(purchaseService.getTotalOrders());
+
+    }
 }

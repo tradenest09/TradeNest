@@ -37,3 +37,7 @@ export const updateProduct = (pid, product) => {
 export const deleteProduct = (pid) => {
     return axiosInstance.delete(`${BASE_URL}/${pid}`);
 };
+
+export const getTotalProducts = () => {
+    return axiosInstance.get("http://localhost:8082/api/products/count");
+};

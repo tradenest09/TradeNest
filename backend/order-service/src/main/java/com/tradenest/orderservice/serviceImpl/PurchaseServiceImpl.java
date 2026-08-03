@@ -104,4 +104,11 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .status(purchase.getStatus())
                 .build();
     }
+    
+    @Override
+    public long getTotalOrders() {
+
+        return purchaseRepository.count();
+
+    }
 }

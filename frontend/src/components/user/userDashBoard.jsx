@@ -17,7 +17,7 @@ export default function UserDashboard() {
       <div className="d-flex justify-content-between align-items-center mb-3">
 
         <h2>
-          Welcome {auth?.user?.username || "User"}
+          Welcome {auth?.user?.fname || "User"}
         </h2>
 
         <Link

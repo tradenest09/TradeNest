@@ -25,5 +25,7 @@ public interface PurchaseService {
 
     // Cancel Purchase
     ApiResponse cancelPurchase(Integer purchaseId);
+    
+    long getTotalOrders();
 
 }

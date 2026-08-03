@@ -2,6 +2,7 @@ package com.tradenest.productservice.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tradenest.productservice.dto.request.AddProductRequest;
@@ -76,5 +77,12 @@ public class ProductController {
     @DeleteMapping("/{pid}")
     public ApiResponse deleteProduct(@PathVariable Integer pid) {
         return productService.deleteProduct(pid);
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalProducts() {
+
+        return ResponseEntity.ok(productService.getTotalProducts());
+
     }
 }

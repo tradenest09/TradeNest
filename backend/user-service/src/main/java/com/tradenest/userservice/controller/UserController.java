@@ -1,6 +1,5 @@
 package com.tradenest.userservice.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import com.tradenest.userservice.dto.response.ApiResponse;
 import com.tradenest.userservice.dto.response.LoginResponse;
 import com.tradenest.userservice.dto.response.UserResponse;
 import com.tradenest.userservice.service.UserService;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -74,12 +72,18 @@ public class UserController {
 
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("/search")
-	public ResponseEntity<UserResponse> getUserByUname(@RequestParam("uname") String uname){
-		
-		UserResponse response =userService.getUserByUname(uname);
+	public ResponseEntity<UserResponse> getUserByUname(@RequestParam("uname") String uname) {
+
+		UserResponse response = userService.getUserByUname(uname);
 		return ResponseEntity.ok(response);
 	}
-}
 
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalUsers() {
+
+		return ResponseEntity.ok(userService.getTotalUsers());
+
+	}
+}
