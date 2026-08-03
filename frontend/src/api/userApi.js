@@ -26,3 +26,7 @@ export const deleteUser = (uid) => {
 export const searchUser = (uname) => {
   return axiosInstance.get(`${BASE_URL}/search?uname=${uname}`);
 };
+
+export const getTotalUsers = () => {
+    return axiosInstance.get("http://localhost:8081/api/users/count");
+};

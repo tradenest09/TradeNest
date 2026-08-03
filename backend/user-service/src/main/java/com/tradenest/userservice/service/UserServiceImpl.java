@@ -154,6 +154,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new RuntimeException("User not found : " + uname));
     }
+    
+    @Override
+    public long getTotalUsers() {
+
+        return userRepository.count();
+
+    }
 
     private UserResponse mapToUserResponse(User user) {
 

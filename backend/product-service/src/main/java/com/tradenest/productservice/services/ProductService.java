@@ -27,5 +27,7 @@ public interface ProductService {
     ProductResponse updateProduct(Integer pid, UpdateProductRequest request);
 
     ApiResponse deleteProduct(Integer pid);
+    
+    long getTotalProducts();
 
 }

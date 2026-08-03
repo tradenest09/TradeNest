@@ -24,6 +24,7 @@ public interface UserService {
 	ApiResponse deleteUser(Integer uid);
 	
 	public UserResponse getUserByUname(String uname);
+	long getTotalUsers();
 	
 }
 
