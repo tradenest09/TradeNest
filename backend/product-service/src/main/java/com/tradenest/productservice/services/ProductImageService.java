@@ -6,6 +6,8 @@ import com.tradenest.productservice.dto.request.AddImageRequest;
 import com.tradenest.productservice.dto.response.ApiResponse;
 import com.tradenest.productservice.dto.response.ImageResponse;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface ProductImageService {
 
     ImageResponse addImage(AddImageRequest request);
@@ -14,4 +16,5 @@ public interface ProductImageService {
 
     ApiResponse deleteImage(Integer piid);
 
+    ImageResponse uploadImage(Integer productId, MultipartFile file);
 }

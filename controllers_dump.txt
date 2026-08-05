@@ -1,0 +1,528 @@
+﻿package com.tradenest.orderservice.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.orderservice.dto.request.PurchaseRequest;
+import com.tradenest.orderservice.dto.response.ApiResponse;
+import com.tradenest.orderservice.dto.response.PurchaseResponse;
+import com.tradenest.orderservice.service.PurchaseService;
+
+@RestController
+@RequestMapping("/api/purchases")
+@CrossOrigin(origins = "*")
+public class PurchaseController
+{
+
+    private final PurchaseService purchaseService;
+
+    public PurchaseController(PurchaseService purchaseService)
+    {
+        this.purchaseService = purchaseService;
+    }
+
+    // Create Purchase
+    @PostMapping
+    public ResponseEntity<PurchaseResponse> createPurchase(
+            @RequestBody PurchaseRequest request) 
+    {
+        return new ResponseEntity<>(
+                purchaseService.createPurchase(request),
+                HttpStatus.CREATED);
+    }
+
+    // Get Purchase by ID
+    @GetMapping("/{purchaseId}")
+    public ResponseEntity<PurchaseResponse> getPurchaseById(
+            @PathVariable Integer purchaseId)
+    {
+        return ResponseEntity.ok(
+                purchaseService.getPurchaseById(purchaseId));
+    }
+
+    // Get All Purchases
+    @GetMapping
+    public ResponseEntity<List<PurchaseResponse>> getAllPurchases()
+    {
+        return ResponseEntity.ok(
+                purchaseService.getAllPurchases());
+    }
+
+    // Get Purchases by Buyer
+    @GetMapping("/buyer/{buyerId}")
+    public ResponseEntity<List<PurchaseResponse>> getPurchasesByBuyer(
+            @PathVariable Integer buyerId) {
+
+        return ResponseEntity.ok(
+                purchaseService.getPurchasesByBuyer(buyerId));
+    }
+
+    // Get Purchases by Seller
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<List<PurchaseResponse>> getPurchasesBySeller(
+            @PathVariable Integer sellerId)
+    {
+        return ResponseEntity.ok(
+                purchaseService.getPurchasesBySeller(sellerId));
+    }
+
+    // Cancel Purchase
+    @DeleteMapping("/{purchaseId}")
+    public ResponseEntity<ApiResponse> cancelPurchase(
+            @PathVariable Integer purchaseId)
+    {
+        return ResponseEntity.ok(
+                purchaseService.cancelPurchase(purchaseId));
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalOrders() {
+
+        return ResponseEntity.ok(purchaseService.getTotalOrders());
+
+    }
+}
+package com.tradenest.orderservice.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.orderservice.dto.request.RentalRequest;
+import com.tradenest.orderservice.dto.request.UpdateRentalStatusRequest;
+import com.tradenest.orderservice.dto.response.ApiResponse;
+import com.tradenest.orderservice.dto.response.RentalResponse;
+import com.tradenest.orderservice.service.RentalService;
+
+@RestController
+@RequestMapping("/api/rentals")
+@CrossOrigin(origins = "*")
+public class RentalController {
+
+    private final RentalService rentalService;
+
+    public RentalController(RentalService rentalService) {
+        this.rentalService = rentalService;
+    }
+
+    // Create Rental
+    @PostMapping
+    public ResponseEntity<RentalResponse> createRental(
+            @RequestBody RentalRequest request) {
+
+        return new ResponseEntity<>(
+                rentalService.createRental(request),
+                HttpStatus.CREATED);
+    }
+
+    // Get Rental by ID
+    @GetMapping("/{rentalId}")
+    public ResponseEntity<RentalResponse> getRentalById(
+            @PathVariable Integer rentalId) {
+
+        return ResponseEntity.ok(
+                rentalService.getRentalById(rentalId));
+    }
+
+    // Get All Rentals
+    @GetMapping
+    public ResponseEntity<List<RentalResponse>> getAllRentals() {
+
+        return ResponseEntity.ok(
+                rentalService.getAllRentals());
+    }
+
+    // Get Rentals by Owner
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<RentalResponse>> getRentalsByOwner(
+            @PathVariable Integer ownerId) {
+
+        return ResponseEntity.ok(
+                rentalService.getRentalsByOwner(ownerId));
+    }
+
+    // Get Rentals by Renter
+    @GetMapping("/renter/{renterId}")
+    public ResponseEntity<List<RentalResponse>> getRentalsByRenter(
+            @PathVariable Integer renterId) {
+
+        return ResponseEntity.ok(
+                rentalService.getRentalsByRenter(renterId));
+    }
+
+    // Update Rental Status
+    @PutMapping("/status")
+    public ResponseEntity<RentalResponse> updateRentalStatus(
+            @RequestBody UpdateRentalStatusRequest request) {
+
+        return ResponseEntity.ok(
+                rentalService.updateRentalStatus(request));
+    }
+
+    // Cancel Rental
+    @DeleteMapping("/{rentalId}")
+    public ResponseEntity<ApiResponse> cancelRental(
+            @PathVariable Integer rentalId) {
+
+        return ResponseEntity.ok(
+                rentalService.cancelRental(rentalId));
+    }
+}
+package com.tradenest.productservice.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.productservice.dto.request.AddCategoryRequest;
+import com.tradenest.productservice.dto.request.UpdateCategoryRequest;
+import com.tradenest.productservice.dto.response.ApiResponse;
+import com.tradenest.productservice.dto.response.CategoryResponse;
+import com.tradenest.productservice.services.CategoryService;
+
+@RestController
+@RequestMapping("/api/categories")
+@CrossOrigin(origins = "*")
+public class CategoryController {
+
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    // Add Category
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryResponse addCategory(@RequestBody AddCategoryRequest request) {
+        return categoryService.addCategory(request);
+    }
+
+    
+    @GetMapping
+    public List<CategoryResponse> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
+
+    @GetMapping("/{cid}")
+    public CategoryResponse getCategoryById(@PathVariable Integer cid) {
+        return categoryService.getCategoryById(cid);
+    }
+
+
+    @PutMapping("/{cid}")
+    public CategoryResponse updateCategory(@PathVariable Integer cid,
+                                           @RequestBody UpdateCategoryRequest request) {
+        return categoryService.updateCategory(cid, request);
+    }
+
+    
+    @DeleteMapping("/{cid}")
+    public ApiResponse deleteCategory(@PathVariable Integer cid) {
+        return categoryService.deleteCategory(cid);
+    }
+
+}
+package com.tradenest.productservice.controller;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.productservice.dto.request.AddProductRequest;
+import com.tradenest.productservice.dto.request.UpdateProductRequest;
+import com.tradenest.productservice.dto.response.ApiResponse;
+import com.tradenest.productservice.dto.response.ProductResponse;
+import com.tradenest.productservice.enums.ProductType;
+import com.tradenest.productservice.services.ProductService;
+
+@RestController
+@RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    // Add Product
+    @PostMapping
+    public ProductResponse addProduct(@RequestBody AddProductRequest request) {
+        return productService.addProduct(request);
+    }
+
+    // Get Product By Id
+    @GetMapping("/{pid}")
+    public ProductResponse getProductById(@PathVariable Integer pid) {
+        return productService.getProductById(pid);
+    }
+
+    // Get All Products
+    @GetMapping
+    public List<ProductResponse> getAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    // Get Products By Category
+    @GetMapping("/category/{cid}")
+    public List<ProductResponse> getProductsByCategory(@PathVariable Integer cid) {
+        return productService.getProductsByCategory(cid);
+    }
+
+    // Get Products By Seller
+    @GetMapping("/seller/{uid}")
+    public List<ProductResponse> getProductsBySeller(@PathVariable Integer uid) {
+        return productService.getProductsBySeller(uid);
+    }
+
+    // Get Products By Type
+    @GetMapping("/type/{type}")
+    public List<ProductResponse> getProductsByType(@PathVariable ProductType type) {
+        return productService.getProductsByType(type);
+    }
+
+    // Search Product
+    @GetMapping("/search")
+    public List<ProductResponse> searchProducts(@RequestParam String keyword) {
+        return productService.searchProducts(keyword);
+    }
+
+    // Update Product
+    @PutMapping("/{pid}")
+    public ProductResponse updateProduct(@PathVariable Integer pid,
+            @RequestBody UpdateProductRequest request) {
+
+        return productService.updateProduct(pid, request);
+    }
+
+    // Delete Product
+    @DeleteMapping("/{pid}")
+    public ApiResponse deleteProduct(@PathVariable Integer pid) {
+        return productService.deleteProduct(pid);
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalProducts() {
+
+        return ResponseEntity.ok(productService.getTotalProducts());
+
+    }
+}
+package com.tradenest.productservice.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.productservice.dto.request.AddImageRequest;
+import com.tradenest.productservice.dto.response.ApiResponse;
+import com.tradenest.productservice.dto.response.ImageResponse;
+import com.tradenest.productservice.services.ProductImageService;
+
+@RestController
+@RequestMapping("/api/images")
+@CrossOrigin(origins = "*")
+public class ProductImageController {
+
+    private final ProductImageService productImageService;
+
+    public ProductImageController(ProductImageService productImageService) {
+        this.productImageService = productImageService;
+    }
+
+    @PostMapping
+    public ImageResponse addImage(@RequestBody AddImageRequest request) {
+        return productImageService.addImage(request);
+    }
+
+    @GetMapping("/product/{pid}")
+    public List<ImageResponse> getImagesByProduct(@PathVariable Integer pid) {
+        return productImageService.getImagesByProduct(pid);
+    }
+
+    @DeleteMapping("/{imageId}")
+    public ApiResponse deleteImage(@PathVariable Integer imageId) {
+        return productImageService.deleteImage(imageId);
+    }
+
+}
+package com.tradenest.productservice.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.productservice.dto.request.AddRentRequest;
+import com.tradenest.productservice.dto.response.ApiResponse;
+import com.tradenest.productservice.dto.response.ProductRentResponse;
+import com.tradenest.productservice.services.ProductRentService;
+
+@RestController
+@RequestMapping("/api/rent")
+@CrossOrigin(origins = "*")
+public class ProductRentController {
+
+    private final ProductRentService productRentService;
+
+    public ProductRentController(ProductRentService productRentService) {
+        this.productRentService = productRentService;
+    }
+
+    @PostMapping
+    public ProductRentResponse addRent(@RequestBody AddRentRequest request) {
+        return productRentService.addRent(request);
+    }
+
+    @GetMapping("/product/{pid}")
+    public ProductRentResponse getRentByProduct(@PathVariable Integer pid) {
+        return productRentService.getRentByProduct(pid);
+    }
+
+    @DeleteMapping("/{prid}")
+    public ApiResponse deleteRent(@PathVariable Integer prid) {
+        return productRentService.deleteRent(prid);
+    }
+
+}
+package com.tradenest.productservice.controller;
+
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.tradenest.productservice.dto.request.UpdateReportStatusRequest;
+import com.tradenest.productservice.dto.response.ReportResponse;
+import com.tradenest.productservice.entities.Report;
+import com.tradenest.productservice.repositories.ReportRepository;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/reports")
+public class ReportController {
+    private final ReportRepository reportRepository;
+
+    public ReportController(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
+
+    @GetMapping
+    public List<ReportResponse> getAll() {
+        return reportRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    @PutMapping("/{reportId}/status")
+    public ResponseEntity<ReportResponse> updateStatus(@PathVariable Integer reportId,
+            @Valid @RequestBody UpdateReportStatusRequest request) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new IllegalArgumentException("Report not found"));
+        report.setStatus(request.getStatus());
+        return ResponseEntity.ok(toResponse(reportRepository.save(report)));
+    }
+
+    private ReportResponse toResponse(Report report) {
+        return ReportResponse.builder().reportId(report.getReportId()).pid(report.getPid())
+                .reporterId(report.getReporterId()).reason(report.getReason())
+                .description(report.getDescription()).status(report.getStatus())
+                .reportDate(report.getReportDate()).build();
+    }
+}
+package com.tradenest.userservice.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.tradenest.userservice.dto.request.LoginRequest;
+import com.tradenest.userservice.dto.request.RegisterUserRequest;
+import com.tradenest.userservice.dto.request.UpdateUserRequest;
+import com.tradenest.userservice.dto.response.ApiResponse;
+import com.tradenest.userservice.dto.response.LoginResponse;
+import com.tradenest.userservice.dto.response.UserResponse;
+import com.tradenest.userservice.service.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+	private final UserService userService;
+
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
+
+	@PostMapping("/register")
+	public ResponseEntity<UserResponse> registerUser(@RequestBody RegisterUserRequest request) {
+
+		UserResponse response = userService.registerUser(request);
+
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+
+		LoginResponse response = userService.loginUser(request);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{uid}")
+	public ResponseEntity<UserResponse> getUserById(@PathVariable Integer uid) {
+
+		UserResponse response = userService.getUserById(uid);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<UserResponse>> getAllUsers() {
+
+		List<UserResponse> users = userService.getAllUsers();
+
+		return ResponseEntity.ok(users);
+	}
+
+	@PutMapping("/{uid}")
+	public ResponseEntity<UserResponse> updateUser(@PathVariable Integer uid, @RequestBody UpdateUserRequest request) {
+
+		UserResponse response = userService.updateUser(uid, request);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping("/{uid}")
+	public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer uid) {
+
+		ApiResponse response = userService.deleteUser(uid);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<UserResponse> getUserByUname(@RequestParam("uname") String uname) {
+
+		UserResponse response = userService.getUserByUname(uname);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalUsers() {
+
+		return ResponseEntity.ok(userService.getTotalUsers());
+
+	}
+}

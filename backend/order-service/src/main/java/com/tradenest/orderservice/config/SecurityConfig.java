@@ -10,6 +10,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.tradenest.orderservice.security.JwtAuthenticationFilter;
 
+import org.springframework.http.HttpMethod;
+
 @Configuration
 public class SecurityConfig {
 
@@ -31,9 +33,8 @@ public class SecurityConfig {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 				.authorizeHttpRequests(auth -> auth
-
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/actuator/**").permitAll()
-
 						.anyRequest().authenticated())
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

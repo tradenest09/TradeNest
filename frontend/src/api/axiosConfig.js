@@ -10,8 +10,16 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
 
-    if (token) {
+    // Skip attaching Authorization header for login and register endpoints
+    const isAuthEndpoint = config.url && (config.url.includes('/login') || config.url.includes('/register'));
+
+    if (token && token !== "undefined" && token !== "null" && !isAuthEndpoint) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Allow the browser to automatically set the Content-Type with a boundary for FormData
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
     }
 
     return config;

@@ -1,7 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const safeParseUser = () => {
+  try {
+    const userStr = localStorage.getItem("user");
+    if (!userStr || userStr === "undefined" || userStr === "null") {
+      localStorage.removeItem("user");
+      return null;
+    }
+    return JSON.parse(userStr);
+  } catch (e) {
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: safeParseUser(),
   token: localStorage.getItem("token") || null,
   isAuthenticated: !!localStorage.getItem("token"),
 };

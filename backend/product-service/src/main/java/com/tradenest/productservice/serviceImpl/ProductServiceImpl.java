@@ -1,6 +1,9 @@
 package com.tradenest.productservice.serviceImpl;
 
 import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,9 @@ import com.tradenest.productservice.enums.ProductStatus;
 import com.tradenest.productservice.enums.ProductType;
 import com.tradenest.productservice.repositories.CategoryRepository;
 import com.tradenest.productservice.repositories.ProductRepository;
+import com.tradenest.productservice.repositories.ProductImageRepository;
+import com.tradenest.productservice.entities.ProductImage;
+import com.tradenest.productservice.dto.response.ImageResponse;
 import com.tradenest.productservice.services.ProductService;
 
 @Service
@@ -21,12 +27,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductImageRepository productImageRepository;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository,
+                              ProductImageRepository productImageRepository) {
 
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.productImageRepository = productImageRepository;
     }
     @Override
     public ProductResponse addProduct(AddProductRequest request) {
@@ -61,6 +70,16 @@ public class ProductServiceImpl implements ProductService {
     }
     
     private ProductResponse convertToResponse(Product product) {
+        
+        List<ProductImage> productImages = productImageRepository.findByProductPid(product.getPid());
+        List<ImageResponse> imageResponses = productImages.stream().map(img -> 
+            ImageResponse.builder()
+                .imageId(img.getImageId())
+                .pid(img.getProduct().getPid())
+                .imageUrl(img.getImageUrl())
+                .isPrimary(img.getIsPrimary())
+                .build()
+        ).toList();
 
         return ProductResponse.builder()
                 .pid(product.getPid())
@@ -73,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
                 .status(product.getStatus())
                 .type(product.getType())
                 .createdAt(product.getCreatedAt())
+                .images(imageResponses)
                 .build();
     }
 
@@ -149,6 +169,18 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findById(pid)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Delete associated physical images and DB records
+        List<ProductImage> images = productImageRepository.findByProductPid(pid);
+        for (ProductImage img : images) {
+            try {
+                Path filePath = Paths.get("uploads/products/", img.getImageUrl());
+                Files.deleteIfExists(filePath);
+            } catch (Exception e) {
+                System.err.println("Failed to delete physical image file: " + e.getMessage());
+            }
+        }
+        productImageRepository.deleteAll(images);
 
         productRepository.delete(product);
 

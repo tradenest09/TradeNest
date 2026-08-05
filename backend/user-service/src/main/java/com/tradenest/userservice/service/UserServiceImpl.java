@@ -162,6 +162,32 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public ApiResponse changePassword(String email, com.tradenest.userservice.dto.request.ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Incorrect current password");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirm password do not match");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new RuntimeException("New password cannot be the same as the current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return ApiResponse.builder()
+                .success(true)
+                .message("Password updated successfully")
+                .build();
+    }
+
     private UserResponse mapToUserResponse(User user) {
 
         return UserResponse.builder()

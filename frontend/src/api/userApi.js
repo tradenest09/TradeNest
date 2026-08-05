@@ -30,3 +30,8 @@ export const searchUser = (uname) => {
 export const getTotalUsers = () => {
     return axiosInstance.get("http://localhost:8081/api/users/count");
 };
+
+// Change Password
+export const changePassword = (passwordData) => {
+  return axiosInstance.put(`${BASE_URL}/change-password`, passwordData);
+};

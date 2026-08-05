@@ -26,5 +26,6 @@ public interface UserService {
 	public UserResponse getUserByUname(String uname);
 	long getTotalUsers();
 	
+	ApiResponse changePassword(String email, com.tradenest.userservice.dto.request.ChangePasswordRequest request);
 }
 

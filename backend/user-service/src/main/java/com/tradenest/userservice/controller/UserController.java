@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.Authentication;
+
+import com.tradenest.userservice.dto.request.ChangePasswordRequest;
 import com.tradenest.userservice.dto.request.LoginRequest;
 import com.tradenest.userservice.dto.request.RegisterUserRequest;
 import com.tradenest.userservice.dto.request.UpdateUserRequest;
@@ -85,5 +88,16 @@ public class UserController {
 
 		return ResponseEntity.ok(userService.getTotalUsers());
 
+	}
+	
+	@PutMapping("/change-password")
+	public ResponseEntity<ApiResponse> changePassword(
+			@RequestBody ChangePasswordRequest request,
+			Authentication authentication) {
+		
+		String email = authentication.getName();
+		ApiResponse response = userService.changePassword(email, request);
+		
+		return ResponseEntity.ok(response);
 	}
 }

@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.tradenest.orderservice.dto.request.PurchaseRequest;
 import com.tradenest.orderservice.dto.response.ApiResponse;
+import com.tradenest.orderservice.dto.response.ProductDto;
 import com.tradenest.orderservice.dto.response.PurchaseResponse;
 import com.tradenest.orderservice.entities.Purchase;
 import com.tradenest.orderservice.enums.PurchaseStatus;
@@ -18,19 +20,42 @@ import com.tradenest.orderservice.service.PurchaseService;
 public class PurchaseServiceImpl implements PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+    private final RestTemplate restTemplate;
 
-    public PurchaseServiceImpl(PurchaseRepository purchaseRepository) {
+    public PurchaseServiceImpl(PurchaseRepository purchaseRepository, RestTemplate restTemplate) {
         this.purchaseRepository = purchaseRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public PurchaseResponse createPurchase(PurchaseRequest request) {
 
+        // Fetch product from product-service to validate price and seller
+        String productUrl = "http://localhost:8082/api/products/" + request.getPid();
+        ProductDto product;
+        try {
+            product = restTemplate.getForObject(productUrl, ProductDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching product details or product not found: " + e.getMessage());
+        }
+
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+
+        if (product.getUid().equals(request.getBuyerId())) {
+            throw new RuntimeException("You cannot buy your own product");
+        }
+
+        if ("SOLD".equals(product.getStatus())) {
+            throw new RuntimeException("Product is already sold");
+        }
+
         Purchase purchase = Purchase.builder()
                 .pid(request.getPid())
                 .buyerId(request.getBuyerId())
-                .sellerId(request.getSellerId())
-                .amount(request.getAmount())
+                .sellerId(product.getUid())
+                .amount(product.getPrice())
                 .purchaseDate(LocalDateTime.now())
                 .status(PurchaseStatus.PENDING)
                 .build();
