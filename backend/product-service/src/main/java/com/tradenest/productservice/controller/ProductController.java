@@ -14,7 +14,6 @@ import com.tradenest.productservice.services.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;
@@ -26,6 +25,8 @@ public class ProductController {
     // Add Product
     @PostMapping
     public ProductResponse addProduct(@RequestBody AddProductRequest request) {
+    	
+    	
         return productService.addProduct(request);
     }
 

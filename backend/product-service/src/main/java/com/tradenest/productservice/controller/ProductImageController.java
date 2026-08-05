@@ -11,7 +11,6 @@ import com.tradenest.productservice.services.ProductImageService;
 
 @RestController
 @RequestMapping("/api/images")
-@CrossOrigin(origins = "*")
 public class ProductImageController {
 
     private final ProductImageService productImageService;

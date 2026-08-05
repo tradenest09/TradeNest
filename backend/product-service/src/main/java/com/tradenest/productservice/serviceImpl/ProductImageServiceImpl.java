@@ -1,6 +1,13 @@
 package com.tradenest.productservice.serviceImpl;
 
 import java.util.List;
+import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.stereotype.Service;
 
@@ -58,6 +65,13 @@ public class ProductImageServiceImpl implements ProductImageService {
         ProductImage image = productImageRepository.findById(piid)
                 .orElseThrow(() -> new RuntimeException("Image not found"));
 
+        try {
+            Path filePath = Paths.get("uploads/products/", image.getImageUrl());
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            System.err.println("Failed to delete physical image file: " + e.getMessage());
+        }
+
         productImageRepository.delete(image);
 
         return ApiResponse.builder()
@@ -74,6 +88,52 @@ public class ProductImageServiceImpl implements ProductImageService {
                 .imageUrl(image.getImageUrl())
                 .isPrimary(image.getIsPrimary())
                 .build();
+    }
+
+    @Override
+    public ImageResponse uploadImage(Integer productId, MultipartFile file) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (file.isEmpty()) {
+            throw new RuntimeException("Failed to store empty file");
+        }
+
+        try {
+            // Create uploads/products/ if it doesn't exist
+            String uploadDir = "uploads/products/";
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Generate UUID filename preserving extension
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String newFilename = UUID.randomUUID().toString() + extension;
+
+            // Save file
+            Path filePath = uploadPath.resolve(newFilename);
+            Files.copy(file.getInputStream(), filePath);
+
+            // Is this the first image? Make it primary
+            boolean isFirstImage = productImageRepository.findByProductPid(productId).isEmpty();
+
+            // Save into Image table
+            ProductImage image = ProductImage.builder()
+                    .product(product)
+                    .imageUrl(newFilename)
+                    .isPrimary(isFirstImage)
+                    .build();
+
+            ProductImage saved = productImageRepository.save(image);
+            return convertToResponse(saved);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
+        }
     }
 
 }

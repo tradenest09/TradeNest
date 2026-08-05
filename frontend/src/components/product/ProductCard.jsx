@@ -1,141 +1,68 @@
 import { Link } from "react-router-dom";
-import { deleteProduct } from "../../api/productApi";
+import { FiHeart } from "react-icons/fi";
+import { getImageUrl, handleImageError } from "../../utils/imageUtils";
 
-export default function ProductCard({ product }) {
+const rupee = (value) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value || 0);
 
-    const handleDelete = async () => {
+export default function ProductCard({ product, showActions = false, onDelete }) {
+  return (
+    <div className="card-custom h-100 position-relative animate-fade-in d-flex flex-column text-decoration-none">
+      
+      {/* Wishlist Button */}
+      <button className="position-absolute top-0 end-0 m-3 btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center p-2" style={{ zIndex: 10, width: '36px', height: '36px', border: 'none' }}>
+        <FiHeart size={18} className="text-muted" />
+      </button>
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this product?"
-        );
-
-        if (!confirmDelete) return;
-
-        try {
-
-            await deleteProduct(product.pid);
-
-            alert("Product deleted successfully.");
-
-            window.location.reload();
-
-        } catch (error) {
-
-            alert("Unable to delete product.");
-
-        }
-
-    };
-
-    return (
-
-        <div className="card shadow h-100 border-0">
-
-            {/* Image Placeholder */}
-            <div
-                className="d-flex justify-content-center align-items-center bg-light"
-                style={{ height: "220px" }}
-            >
-
-                <i
-                    className="bi bi-image"
-                    style={{
-                        fontSize: "60px",
-                        color: "#b0b0b0"
-                    }}
-                ></i>
-
+      <Link to={`/products/${product.pid}`} className="text-decoration-none text-main d-flex flex-column h-100">
+        {/* Image Area */}
+        <div className="bg-light position-relative overflow-hidden" style={{ height: "180px", borderBottom: '1px solid var(--border-color)' }}>
+          {product.images && product.images.length > 0 ? (
+            <img 
+              src={getImageUrl(product.images[0].imageUrl)} 
+              alt={product.pname} 
+              className="w-100 h-100" 
+              style={{ objectFit: 'cover' }} 
+              onError={handleImageError}
+            />
+          ) : (
+            <div className="w-100 h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#f0f2f5' }}>
+              <span style={{ fontSize: '48px' }}>📸</span>
             </div>
+          )}
 
-            <div className="card-body">
-
-                <h5 className="fw-bold">
-
-                    {product.pname}
-
-                </h5>
-
-                <p className="text-muted mb-1">
-
-                    <strong>Category :</strong> {product.categoryName}
-
-                </p>
-
-                <p
-                    className="text-secondary"
-                    style={{
-                        height: "50px",
-                        overflow: "hidden"
-                    }}
-                >
-
-                    {product.pdesc}
-
-                </p>
-
-                <h4 className="text-success">
-
-                    ₹ {product.price}
-
-                </h4>
-
-                <div className="mb-2">
-
-                    <span className="badge bg-primary me-2">
-
-                        {product.type}
-
-                    </span>
-
-                    <span className="badge bg-success">
-
-                        {product.status}
-
-                    </span>
-
-                </div>
-
-                <small className="text-muted">
-
-                    Added :
-                    {" "}
-                    {new Date(product.createdAt).toLocaleDateString()}
-
-                </small>
-
-            </div>
-
-            <div className="card-footer bg-white border-0">
-
-                <div className="d-grid gap-2">
-
-                    <Link
-                        to={`/products/${product.pid}`}
-                        className="btn btn-outline-primary"
-                    >
-                        View Details
-                    </Link>
-
-                    <Link
-                        to={`/products/edit/${product.pid}`}
-                        className="btn btn-warning"
-                    >
-                        Edit
-                    </Link>
-
-                    <button
-                        className="btn btn-danger"
-                        onClick={handleDelete}
-                    >
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
+          {/* Badges */}
+          <div className="position-absolute bottom-0 start-0 m-2 d-flex gap-1">
+            <span className={`badge ${product.type === 'SELL' ? 'bg-primary' : 'bg-warning text-dark'} shadow-sm`} style={{ fontSize: '10px', fontWeight: 600 }}>
+              {product.type === 'SELL' ? 'FOR SALE' : 'FOR RENT'}
+            </span>
+          </div>
         </div>
 
-    );
+        {/* Card Body */}
+        <div className="card-body p-3 d-flex flex-column flex-grow-1">
+          <h3 className="fw-bold mb-1" style={{ fontSize: '1.25rem', color: 'var(--text-main)' }}>
+            {rupee(product.price)}
+            {product.type === 'RENT' && <span className="text-muted fw-normal" style={{ fontSize: '14px' }}> / day</span>}
+          </h3>
+          
+          <h6 className="text-main fw-normal mb-1 text-truncate" style={{ fontSize: '15px' }} title={product.pname}>
+            {product.pname}
+          </h6>
+          
+          <div className="mt-auto pt-3 d-flex justify-content-between align-items-center text-muted" style={{ fontSize: '12px' }}>
+            <span className="text-truncate" style={{ maxWidth: '60%' }}>{product.categoryName}</span>
+            <span>{new Date(product.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</span>
+          </div>
+        </div>
+      </Link>
 
+      {/* Admin/Owner Actions */}
+      {showActions && (
+        <div className="card-footer bg-white border-top p-3 d-flex gap-2">
+          <Link to={`/products/edit/${product.pid}`} className="btn btn-outline-primary btn-sm flex-grow-1" style={{ borderRadius: 'var(--radius-md)' }}>Edit</Link>
+          <button className="btn btn-outline-danger btn-sm flex-grow-1" style={{ borderRadius: 'var(--radius-md)' }} onClick={() => onDelete(product.pid)}>Delete</button>
+        </div>
+      )}
+    </div>
+  );
 }
