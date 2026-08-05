@@ -9,7 +9,7 @@ import com.tradenest.productservice.services.ProductRentService;
 
 @RestController
 @RequestMapping("/api/rent")
-@CrossOrigin(origins = "*")
+
 public class ProductRentController {
 
     private final ProductRentService productRentService;

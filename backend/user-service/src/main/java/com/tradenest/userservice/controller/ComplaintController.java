@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/complaints")
-@CrossOrigin(origins = "*")
+
 public class ComplaintController {
 
     private final ComplaintService complaintService;
@@ -51,3 +51,4 @@ public class ComplaintController {
         return ResponseEntity.ok(complaintService.deleteComplaint(complaintId));
     }
 }
+
