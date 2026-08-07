@@ -31,10 +31,20 @@ export default function ProductCard({ product, showActions = false, onDelete }) 
           )}
 
           {/* Badges */}
-          <div className="position-absolute bottom-0 start-0 m-2 d-flex gap-1">
-            <span className={`badge ${product.type === 'SELL' ? 'bg-primary' : 'bg-warning text-dark'} shadow-sm`} style={{ fontSize: '10px', fontWeight: 600 }}>
-              {product.type === 'SELL' ? 'FOR SALE' : 'FOR RENT'}
-            </span>
+          <div className="position-absolute bottom-0 start-0 m-2 d-flex flex-column gap-1">
+            <div>
+              <span className={`badge ${product.type === 'SELL' ? 'bg-primary' : 'bg-warning text-dark'} shadow-sm`} style={{ fontSize: '10px', fontWeight: 600 }}>
+                {product.type === 'SELL' ? 'FOR SALE' : 'FOR RENT'}
+              </span>
+            </div>
+            <div>
+              {product.status === 'AVAILABLE' && (
+                <span className="badge bg-success shadow-sm" style={{ fontSize: '10px', fontWeight: 600 }}>AVAILABLE</span>
+              )}
+              {product.status === 'SOLD' && (
+                <span className="badge bg-danger shadow-sm" style={{ fontSize: '10px', fontWeight: 600 }}>SOLD</span>
+              )}
+            </div>
           </div>
         </div>
 

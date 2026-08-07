@@ -25,6 +25,8 @@ public interface ProductService {
     List<ProductResponse> searchProducts(String keyword);
 
     ProductResponse updateProduct(Integer pid, UpdateProductRequest request);
+    
+    ProductResponse updateProductStatus(Integer pid, com.tradenest.productservice.enums.ProductStatus status);
 
     ApiResponse deleteProduct(Integer pid);
     

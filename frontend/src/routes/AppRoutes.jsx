@@ -1,4 +1,4 @@
-﻿import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginComp from "../components/auth/LoginComp";
 import RegisterComp from "../components/auth/RegisterComp";
 import LogoutComp from "../components/auth/LogoutComp";
@@ -12,6 +12,7 @@ import EditProduct from "../components/product/EditProduct";
 import AddProduct from "../components/product/AddProduct";
 import { AdminManagementPage, UserAccountPage } from "../components/management/AccountPages";
 import ReportManagement from "../components/admin/ReportManagement";
+import AiAssistant from "../pages/AiAssistant";
 
 export default function AppRoutes() {
   return <Routes>
@@ -28,6 +29,7 @@ export default function AppRoutes() {
     <Route path="/products/add" element={<ProtectedRoute><AddProduct /></ProtectedRoute>} />
     <Route path="/products/:pid" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
     <Route path="/products/edit/:pid" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
+    <Route path="/ai-assistant" element={<ProtectedRoute><AiAssistant /></ProtectedRoute>} />
     <Route path="*" element={<HomeComp />} />
   </Routes>;
 }

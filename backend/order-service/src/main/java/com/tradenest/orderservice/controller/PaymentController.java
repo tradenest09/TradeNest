@@ -24,6 +24,7 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<PaymentResponse> addPayment(@RequestBody AddPaymentRequest request) {
+        System.out.println("Controller Hit: POST /api/payments");
         return new ResponseEntity<>(paymentService.addPayment(request), HttpStatus.CREATED);
     }
 

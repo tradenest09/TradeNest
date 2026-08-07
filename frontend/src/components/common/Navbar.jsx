@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/authSlice";
-import { FiSearch, FiHeart, FiMessageSquare, FiUser, FiPlus, FiMenu } from "react-icons/fi";
+import { FiSearch, FiHeart, FiMessageSquare, FiUser, FiPlus, FiMenu, FiCpu } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 export default function Navbar() {
@@ -60,6 +60,11 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="d-flex align-items-center gap-4">
+            <Link to="/ai-assistant" className="text-decoration-none text-main d-flex flex-column align-items-center gap-1 hover-primary" style={{ transition: 'color 0.2s', color: 'var(--text-main)' }}>
+              <FiCpu size={24} />
+              <span style={{ fontSize: '12px', fontWeight: 600 }}>AI Assistant</span>
+            </Link>
+
             <Link to="/wishlist" className="text-decoration-none text-main d-flex flex-column align-items-center gap-1 hover-primary" style={{ transition: 'color 0.2s', color: 'var(--text-main)' }}>
               <FiHeart size={24} />
               <span style={{ fontSize: '12px', fontWeight: 600 }}>Wishlist</span>

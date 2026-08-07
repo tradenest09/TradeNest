@@ -80,6 +80,17 @@ public class ProductController {
         return productService.deleteProduct(pid);
     }
     
+    // Update Product Status
+    @PutMapping("/{pid}/status")
+    public ProductResponse updateProductStatus(@PathVariable Integer pid, @RequestParam String status) {
+        return productService.updateProductStatus(pid, com.tradenest.productservice.enums.ProductStatus.valueOf(status.toUpperCase()));
+    }
+    
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse> handleIllegalStateException(IllegalStateException ex) {
+        return ResponseEntity.status(409).body(ApiResponse.builder().success(false).message(ex.getMessage()).build());
+    }
+
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalProducts() {
 

@@ -82,6 +82,11 @@ spring:
           predicates:
             - Path=/uploads/**
 
+        - id: ai-service
+          uri: lb://AI-SERVICE
+          predicates:
+            - Path=/api/ai/**
+
 eureka:
   client:
     service-url:

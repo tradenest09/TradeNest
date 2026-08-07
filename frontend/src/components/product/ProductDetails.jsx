@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getProductById, getRentByProduct } from "../../api/productApi";
-import { createPurchase, createRental } from "../../api/orderApi";
+import { createPurchase, createRental, addPayment, updatePaymentStatus } from "../../api/orderApi";
 import { FiMapPin, FiHeart, FiShare2, FiShield, FiAlertCircle, FiCheckCircle, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { getImageUrl, handleImageError } from "../../utils/imageUtils";
 import { toast } from "react-toastify";
@@ -78,7 +78,19 @@ export default function ProductDetails() {
     setProcessing(true);
     try {
       const res = await createPurchase({ pid: product.pid, buyerId: user.uid, quantity: 1 });
-      setOrderId(res.data.purchaseId || res.data.id || "TRN-" + Math.floor(Math.random() * 1000000));
+      const purchaseId = res.data.purchaseId || res.data.id;
+      
+      const paymentRes = await addPayment({
+        purchaseId: purchaseId,
+        payerId: user.uid,
+        amount: product.price,
+        paymentMethod: "TradeNest Secure",
+        transactionRef: "TXN-" + Date.now()
+      });
+      
+      await updatePaymentStatus(paymentRes.data.paymentId, { status: "SUCCESS" });
+
+      setOrderId(purchaseId || "TRN-" + Math.floor(Math.random() * 1000000));
       setShowConfirmModal(false);
       setShowSuccessModal(true);
       loadProduct();
@@ -104,7 +116,19 @@ export default function ProductDetails() {
         endDate: endDate.toISOString().split('T')[0] 
       });
       
-      setOrderId(res.data.rentalId || res.data.id || "RNT-" + Math.floor(Math.random() * 1000000));
+      const rentalId = res.data.rentalId || res.data.id;
+
+      const paymentRes = await addPayment({
+        rentalId: rentalId,
+        payerId: user.uid,
+        amount: rentalTotalAmount,
+        paymentMethod: "TradeNest Secure",
+        transactionRef: "TXN-" + Date.now()
+      });
+      
+      await updatePaymentStatus(paymentRes.data.paymentId, { status: "SUCCESS" });
+      
+      setOrderId(rentalId || "RNT-" + Math.floor(Math.random() * 1000000));
       setShowConfirmModal(false);
       setShowSuccessModal(true);
       loadProduct();
@@ -256,7 +280,14 @@ export default function ProductDetails() {
                   <span>{new Date(product.createdAt).toLocaleDateString()}</span>
                 </div>
 
-                {product.status === 'AVAILABLE' ? (
+                {product.status === 'SOLD' ? (
+                  <button 
+                    className="btn btn-secondary w-100 py-3 fw-bold fs-5 shadow-sm" 
+                    disabled
+                  >
+                    Already Sold
+                  </button>
+                ) : product.status === 'AVAILABLE' ? (
                   !isRent ? (
                     <button 
                       className="btn btn-primary w-100 py-3 fw-bold fs-5 shadow-sm" 
