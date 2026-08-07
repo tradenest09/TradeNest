@@ -19,7 +19,7 @@ import com.tradenest.userservice.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
+
 public class UserController {
 
 	private final UserService userService;
@@ -101,3 +101,4 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 }
+

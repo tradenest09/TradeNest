@@ -13,7 +13,7 @@ import com.tradenest.orderservice.service.PurchaseService;
 
 @RestController
 @RequestMapping("/api/purchases")
-@CrossOrigin(origins = "*")
+
 public class PurchaseController
 {
 

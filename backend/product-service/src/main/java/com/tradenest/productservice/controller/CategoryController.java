@@ -13,7 +13,7 @@ import com.tradenest.productservice.services.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "*")
+
 public class CategoryController {
 
     private final CategoryService categoryService;

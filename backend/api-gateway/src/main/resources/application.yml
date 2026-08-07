@@ -1,0 +1,90 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowedOrigins: "http://localhost:5173"
+                allowCredentials: true
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+      routes:
+        - id: user-service-users
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+            
+        - id: user-service-complaints
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/complaints/**
+            
+        - id: product-service-products
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/products/**
+            
+        - id: product-service-categories
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/categories/**
+            
+        - id: product-service-images
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/images/**
+            
+        - id: product-service-rent
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/rent/**
+            
+        - id: product-service-reports
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/reports/**
+            
+        - id: product-service-reviews
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/reviews/**
+            
+        - id: order-service-purchases
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/purchases/**
+            
+        - id: order-service-rentals
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/rentals/**
+            
+        - id: order-service-payments
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/payments/**
+            
+        - id: product-service-uploads
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/uploads/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost

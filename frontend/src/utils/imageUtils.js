@@ -17,7 +17,7 @@ export const getImageUrl = (imageUrl) => {
     }
 
     // Newly uploaded images (UUID filenames like "550e8400-e29b-41d4-a716-446655440000.jpg")
-    return `http://localhost:8082/uploads/products/${imageUrl}`;
+    return `http://localhost:8080/uploads/products/${imageUrl}`;
 };
 
 /**

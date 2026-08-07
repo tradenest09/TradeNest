@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosConfig";
 
-const BASE_URL = "http://localhost:8083/api";
+const BASE_URL = "http://localhost:8080/api";
 
 export const getPurchasesByBuyer = (uid) => axiosInstance.get(`${BASE_URL}/purchases/buyer/${uid}`);
 export const getPurchasesBySeller = (uid) => axiosInstance.get(`${BASE_URL}/purchases/seller/${uid}`);

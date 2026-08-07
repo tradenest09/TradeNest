@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = "*")
+
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -40,3 +40,4 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.updatePaymentStatus(paymentId, status));
     }
 }
+

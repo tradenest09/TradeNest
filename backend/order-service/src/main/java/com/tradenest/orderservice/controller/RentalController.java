@@ -14,7 +14,7 @@ import com.tradenest.orderservice.service.RentalService;
 
 @RestController
 @RequestMapping("/api/rentals")
-@CrossOrigin(origins = "*")
+
 public class RentalController {
 
     private final RentalService rentalService;
