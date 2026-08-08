@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.tradenest.orderservice.exception.ProductUnavailableException;
 import com.tradenest.orderservice.dto.request.PurchaseRequest;
 import com.tradenest.orderservice.dto.response.ApiResponse;
 import com.tradenest.orderservice.dto.response.ProductDto;
@@ -47,8 +48,12 @@ public class PurchaseServiceImpl implements PurchaseService {
             throw new RuntimeException("You cannot buy your own product");
         }
 
-        if ("SOLD".equals(product.getStatus())) {
-            throw new RuntimeException("Product is already sold");
+        if ("SOLD".equalsIgnoreCase(product.getStatus())) {
+            throw new ProductUnavailableException("This product has already been sold.");
+        }
+        
+        if ("INACTIVE".equalsIgnoreCase(product.getStatus())) {
+            throw new ProductUnavailableException("This product is unavailable.");
         }
 
         Purchase purchase = Purchase.builder()

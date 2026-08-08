@@ -13,6 +13,7 @@ import com.tradenest.orderservice.repository.PurchaseRepository;
 import com.tradenest.orderservice.repository.RentalTransactionRepository;
 import com.tradenest.orderservice.service.PaymentService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,13 +24,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final PurchaseRepository purchaseRepository;
     private final RentalTransactionRepository rentalRepository;
+    private final RestTemplate restTemplate;
 
     public PaymentServiceImpl(PaymentRepository paymentRepository, 
                               PurchaseRepository purchaseRepository, 
-                              RentalTransactionRepository rentalRepository) {
+                              RentalTransactionRepository rentalRepository,
+                              RestTemplate restTemplate) {
         this.paymentRepository = paymentRepository;
         this.purchaseRepository = purchaseRepository;
         this.rentalRepository = rentalRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -68,17 +72,37 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public PaymentResponse updatePaymentStatus(Integer paymentId, PaymentStatus status) {
+        System.out.println("updatePaymentStatus invoked");
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        if (payment.getPaymentStatus() == status) {
+            return mapToResponse(payment); // Idempotent check
+        }
 
         payment.setPaymentStatus(status);
         Payment updated = paymentRepository.save(payment);
 
         // Auto update purchase / rental status based on payment success
         if (status == PaymentStatus.SUCCESS) {
+            System.out.println("Payment SUCCESS");
             if (payment.getPurchase() != null) {
                 Purchase purchase = payment.getPurchase();
+                
+                // Call product-service to mark as SOLD
+                System.out.println("Calling Product Service");
+                String productUrl = "http://localhost:8082/api/products/" + purchase.getPid() + "/status?status=SOLD";
+                try {
+                    restTemplate.put(productUrl, null);
+                    System.out.println("Product marked SOLD");
+                } catch (org.springframework.web.client.HttpClientErrorException.Conflict e) {
+                    throw new com.tradenest.orderservice.exception.ProductUnavailableException("This product has already been sold.");
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to update product status: " + e.getMessage());
+                }
+                
                 purchase.setStatus(PurchaseStatus.COMPLETED);
                 purchaseRepository.save(purchase);
             }

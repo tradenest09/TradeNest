@@ -165,6 +165,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponse updateProductStatus(Integer pid, ProductStatus status) {
+        Product product = productRepository.findById(pid)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (status == ProductStatus.SOLD && product.getStatus() != ProductStatus.AVAILABLE) {
+            throw new IllegalStateException("This product has already been sold.");
+        }
+
+        product.setStatus(status);
+        Product updated = productRepository.save(product);
+        return convertToResponse(updated);
+    }
+
+    @Override
     public ApiResponse deleteProduct(Integer pid) {
 
         Product product = productRepository.findById(pid)

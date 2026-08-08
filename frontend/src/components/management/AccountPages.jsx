@@ -656,7 +656,11 @@ export function AdminManagementPage() {
                           <td className="fw-bold"><Link to={`/products/${p.pid}`} className="text-decoration-none text-main">{p.pname}</Link></td>
                           <td><span className="badge bg-light text-dark border">{p.type}</span></td>
                           <td>₹{p.price}</td>
-                          <td><span className="text-muted small fw-bold text-uppercase">{p.status}</span></td>
+                          <td>
+                            <span className={`badge ${p.status === 'AVAILABLE' ? 'bg-success' : p.status === 'SOLD' ? 'bg-danger' : 'bg-secondary'}`}>
+                              {p.status}
+                            </span>
+                          </td>
                           <td>
                             <button className="btn btn-outline-danger btn-sm p-1 rounded d-flex align-items-center" onClick={() => handleDeleteProduct(p.pid)}>
                               <FiTrash2 />

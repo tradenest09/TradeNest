@@ -14,7 +14,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -32,9 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("No Bearer Token found.");
             filterChain.doFilter(request, response);
             return;
         }
+
+        System.out.println("JWT Header Found");
 
         try {
 
@@ -58,12 +60,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext()
                         .setAuthentication(authentication);
+                System.out.println("JWT Validated");
+                System.out.println("Authentication Stored");
+                System.out.println("Authentication Principal: " + authentication.getPrincipal());
+                System.out.println("Authorities: " + authentication.getAuthorities());
+            } else {
+                System.out.println("JWT Invalid or userEmail null. userEmail: " + userEmail);
             }
 
         } catch (Exception ex) {
-
+            System.err.println("JWT Authentication Error: " + ex.getMessage());
+            ex.printStackTrace();
             SecurityContextHolder.clearContext();
-
         }
 
         filterChain.doFilter(request, response);

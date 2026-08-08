@@ -40,6 +40,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/actuator/**", "/error").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**", "/api/images/**", "/api/reviews/**", "/uploads/**").permitAll()
+						.requestMatchers(HttpMethod.PUT, "/api/products/*/status").permitAll()
 						.anyRequest().authenticated())
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -13,3 +13,5 @@ export const getAllRentals = () => axiosInstance.get(`${BASE_URL}/rentals`);
 export const createRental = (payload) => axiosInstance.post(`${BASE_URL}/rentals`, payload);
 export const updateRentalStatus = (payload) => axiosInstance.put(`${BASE_URL}/rentals/status`, payload);
 export const cancelRental = (id) => axiosInstance.delete(`${BASE_URL}/rentals/${id}`);
+export const addPayment = (payload) => axiosInstance.post(`${BASE_URL}/payments`, payload);
+export const updatePaymentStatus = (paymentId, payload) => axiosInstance.put(`${BASE_URL}/payments/${paymentId}/status`, payload);
