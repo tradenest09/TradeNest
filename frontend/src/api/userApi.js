@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosConfig";
 
-const BASE_URL = "http://localhost:8080/api/users";
+const BASE_URL = `/api/users`;
 
 // Get User by ID
 export const getUserById = (uid) => {
@@ -28,10 +28,11 @@ export const searchUser = (uname) => {
 };
 
 export const getTotalUsers = () => {
-    return axiosInstance.get("http://localhost:8080/api/users/count");
+    return axiosInstance.get(`/api/users/count`);
 };
 
 // Change Password
 export const changePassword = (passwordData) => {
   return axiosInstance.put(`${BASE_URL}/change-password`, passwordData);
 };
+

@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosConfig";
 
-const BASE_URL = "http://localhost:8080/api/categories";
+const BASE_URL = `/api/categories`;
 
 export const getAllCategories = () => {
     return axiosInstance.get(BASE_URL);

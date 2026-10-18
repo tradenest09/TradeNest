@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosConfig";
 
-const BASE_URL = "http://localhost:8080/api";
+const BASE_URL = `/api`;
 
 export const getPurchasesByBuyer = (uid) => axiosInstance.get(`${BASE_URL}/purchases/buyer/${uid}`);
 export const getPurchasesBySeller = (uid) => axiosInstance.get(`${BASE_URL}/purchases/seller/${uid}`);
@@ -15,3 +15,4 @@ export const updateRentalStatus = (payload) => axiosInstance.put(`${BASE_URL}/re
 export const cancelRental = (id) => axiosInstance.delete(`${BASE_URL}/rentals/${id}`);
 export const addPayment = (payload) => axiosInstance.post(`${BASE_URL}/payments`, payload);
 export const updatePaymentStatus = (paymentId, payload) => axiosInstance.put(`${BASE_URL}/payments/${paymentId}/status`, payload);
+

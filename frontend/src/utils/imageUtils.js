@@ -17,7 +17,8 @@ export const getImageUrl = (imageUrl) => {
     }
 
     // Newly uploaded images (UUID filenames like "550e8400-e29b-41d4-a716-446655440000.jpg")
-    return `http://localhost:8080/uploads/products/${imageUrl}`;
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    return `${API_URL}/uploads/products/${imageUrl}`;
 };
 
 /**

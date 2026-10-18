@@ -1,0 +1,6 @@
+@TradeNest.UserService_HostAddress = http://localhost:5152
+
+GET {{TradeNest.UserService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
