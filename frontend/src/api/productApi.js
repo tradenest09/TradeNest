@@ -1,17 +1,18 @@
+
 import axiosInstance from "./axiosConfig";
 
-const BASE_URL = "http://localhost:8080/api/products";
+const BASE_URL = `/api/products`;
 
 export const addProduct = (product) => {
     return axiosInstance.post(BASE_URL, product);
 };
 
 export const addRent = (rentDetails) => {
-    return axiosInstance.post("http://localhost:8080/api/rent", rentDetails);
+    return axiosInstance.post(`/api/rent`, rentDetails);
 };
 
 export const getRentByProduct = (pid) => {
-    return axiosInstance.get(`http://localhost:8080/api/rent/product/${pid}`);
+    return axiosInstance.get(`/api/rent/product/${pid}`);
 };
 
 export const getAllProducts = () => {
@@ -47,7 +48,7 @@ export const deleteProduct = (pid) => {
 };
 
 export const getTotalProducts = () => {
-    return axiosInstance.get("http://localhost:8080/api/products/count");
+    return axiosInstance.get(`/api/products/count`);
 };
 
 export const uploadProductImage = (pid, formData) => {

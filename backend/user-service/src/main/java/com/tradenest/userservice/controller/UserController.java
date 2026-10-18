@@ -36,14 +36,6 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
-
-		LoginResponse response = userService.loginUser(request);
-
-		return ResponseEntity.ok(response);
-	}
-
 	@GetMapping("/{uid}")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable Integer uid) {
 
@@ -58,6 +50,14 @@ public class UserController {
 		List<UserResponse> users = userService.getAllUsers();
 
 		return ResponseEntity.ok(users);
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+	
+		LoginResponse response = userService.loginUser(request);
+	
+		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/{uid}")
